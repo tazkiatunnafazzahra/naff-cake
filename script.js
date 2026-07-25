@@ -207,7 +207,7 @@ function checkoutWA(){
 
     window.open(
 
-        "https://wa.me/6281234567890?text="+pesan,
+        "https://wa.me/085624119195?text="+pesan,
 
         "_blank"
 
