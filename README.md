@@ -106,7 +106,7 @@ Jl. Mawar No. 25, Semarang, Jawa Tengah
 
 **Kontak**
 
-📞 +62 812-3456-7890
+📞 +62 56-2411-9195
 
 📧 zahrasweetbakery@gmail.com
 
