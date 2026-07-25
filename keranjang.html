@@ -1,129 +1,233 @@
-// Ambil data keranjang
-let keranjang = JSON.parse(localStorage.getItem("keranjang")) || [];
+<!DOCTYPE html>
+<html lang="id">
 
-// Tambah produk
-function tambahKeranjang(nama, harga) {
+<head>
 
-    keranjang.push({
-        nama: nama,
-        harga: harga
-    });
+<meta charset="UTF-8">
 
-    localStorage.setItem("keranjang", JSON.stringify(keranjang));
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    alert(nama + " berhasil ditambahkan.");
-}
+<title>Keranjang | Zahra Sweet Bakery</title>
 
-// Tampilkan keranjang
-function tampilkanKeranjang() {
+<link rel="stylesheet" href="style.css">
 
-    const body = document.getElementById("cart-body");
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    if (!body) return;
+</head>
 
-    body.innerHTML = "";
+<body>
 
-    let total = 0;
+<!-- ================= HEADER ================= -->
 
-    if (keranjang.length === 0) {
+<header class="header">
 
-        body.innerHTML =
-        `<tr>
-            <td colspan="4">Keranjang kosong</td>
-        </tr>`;
+<div class="logo">
 
-        document.getElementById("totalHarga").innerHTML = "Total : Rp0";
+<img src="assets/logo.png" alt="Logo">
 
-        return;
-    }
+<h2>Zahra Sweet Bakery</h2>
 
-    keranjang.forEach((item,index)=>{
+</div>
 
-        total += item.harga;
+<nav>
 
-        body.innerHTML += `
+<a href="index.html">Home</a>
 
-        <tr>
+<a href="produk.html">Produk</a>
 
-            <td>${index+1}</td>
+<a href="keranjang.html" class="active">
+Keranjang
+<span id="cart-count">0</span>
+</a>
 
-            <td>${item.nama}</td>
+<a href="kontak.html">Kontak</a>
 
-            <td>Rp${item.harga.toLocaleString("id-ID")}</td>
+</nav>
 
-            <td>
+</header>
 
-                <button onclick="hapusItem(${index})">
-                    Hapus
+<!-- ================= JUDUL ================= -->
+
+<section class="page-banner">
+
+<h1>Keranjang Belanja</h1>
+
+<p>
+
+Periksa kembali pesanan Anda sebelum melakukan checkout.
+
+</p>
+
+</section>
+
+<!-- ================= KERANJANG ================= -->
+
+<section class="cart-section">
+
+<div class="cart-container">
+
+<table class="cart-table">
+
+<thead>
+
+<tr>
+
+<th>No</th>
+
+<th>Produk</th>
+
+<th>Harga</th>
+
+<th>Aksi</th>
+
+</tr>
+
+</thead>
+
+<tbody id="cart-body">
+
+</tbody>
+
+</table>
+
+        </table>
+
+        <!-- ================= TOTAL ================= -->
+
+        <div class="cart-summary">
+
+            <h2>
+                Total Belanja :
+                <span id="totalHarga">Rp0</span>
+            </h2>
+
+            <div class="cart-button">
+
+                <button
+                    class="btn-secondary"
+                    onclick="kosongkanKeranjang()">
+
+                    🗑️ Kosongkan Keranjang
+
                 </button>
 
-            </td>
+                <button
+                    class="btn-primary"
+                    onclick="checkoutWA()">
 
-        </tr>
+                    📲 Checkout via WhatsApp
 
-        `;
+                </button>
 
-    });
+            </div>
 
-    document.getElementById("totalHarga").innerHTML =
-    "Total : Rp" + total.toLocaleString("id-ID");
-}
+        </div>
 
-// Hapus produk
-function hapusItem(index){
+    </div>
 
-    keranjang.splice(index,1);
+</section>
 
-    localStorage.setItem("keranjang",JSON.stringify(keranjang));
+<!-- ================= CTA ================= -->
 
-    tampilkanKeranjang();
+<section class="cta">
 
-}
+    <h2>Terima Kasih Telah Berbelanja</h2>
 
-// Kosongkan keranjang
-function kosongkanKeranjang(){
+    <p>
 
-    keranjang=[];
+        Kami akan selalu menyajikan roti, cake, dan pastry
+        dengan kualitas terbaik untuk Anda dan keluarga.
 
-    localStorage.removeItem("keranjang");
+    </p>
 
-    tampilkanKeranjang();
+    <div class="cta-button">
 
-}
+        <a href="produk.html" class="btn-primary">
 
-// Checkout
-function checkoutWA(){
+            🍞 Lanjut Belanja
 
-    if(keranjang.length==0){
+        </a>
 
-        alert("Keranjang kosong.");
+        <a
+            href="https://wa.me/6281234567890"
+            target="_blank"
+            class="btn-secondary">
 
-        return;
+            💬 Hubungi Kami
 
-    }
+        </a>
 
-    let pesan="Halo Zahra Sweet Bakery,%0A";
+    </div>
 
-    let total=0;
+</section>
 
-    keranjang.forEach(item=>{
+<!-- ================= FOOTER ================= -->
 
-        pesan +=
-        "- "+item.nama+
-        " Rp"+item.harga.toLocaleString("id-ID")+"%0A";
+<footer class="footer">
 
-        total += item.harga;
+    <div class="footer-container">
 
-    });
+        <div class="footer-about">
 
-    pesan += "%0ATotal = Rp"+total.toLocaleString("id-ID");
+            <h3>Zahra Sweet Bakery</h3>
 
-    window.open(
-        "https://wa.me/6281234567890?text="+pesan,
-        "_blank"
-    );
+            <p>
 
-}
+                Freshly Baked Every Day with Love.
+                Menyediakan berbagai pilihan bakery
+                berkualitas premium.
 
-// Jalankan jika halaman keranjang
-tampilkanKeranjang();
+            </p>
+
+        </div>
+
+        <div class="footer-menu">
+
+            <h3>Menu</h3>
+
+            <ul>
+
+                <li><a href="index.html">Home</a></li>
+
+                <li><a href="produk.html">Produk</a></li>
+
+                <li><a href="keranjang.html">Keranjang</a></li>
+
+                <li><a href="kontak.html">Kontak</a></li>
+
+            </ul>
+
+        </div>
+
+        <div class="footer-contact">
+
+            <h3>Kontak</h3>
+
+            <p>📍 Semarang, Jawa Tengah</p>
+
+            <p>📞 0812-3456-7890</p>
+
+            <p>📧 zahrasweetbakery@gmail.com</p>
+
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+
+        <p>
+
+            © 2026 Zahra Sweet Bakery.
+            All Rights Reserved.
+
+        </p>
+
+    </div>
+
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
