@@ -1,164 +1,239 @@
-// ===============================
-// Zahra Sweet Bakery
-// Contact Script
-// ===============================
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    // ===============================
-    // FORM
-    // ===============================
-
-    const form = document.querySelector(".contact-form form");
-
-    if (form) {
-
-        form.addEventListener("submit", function(e){
-
-            e.preventDefault();
-
-            const nama = form.querySelector('input[type="text"]').value.trim();
-            const email = form.querySelector('input[type="email"]').value.trim();
-            const whatsapp = form.querySelectorAll('input[type="text"]')[1].value.trim();
-            const subjek = form.querySelectorAll('input[type="text"]')[2].value.trim();
-            const pesan = form.querySelector("textarea").value.trim();
-
-            if(
-                nama === "" ||
-                email === "" ||
-                whatsapp === "" ||
-                subjek === "" ||
-                pesan === ""
-            ){
-                alert("Mohon lengkapi seluruh data terlebih dahulu.");
-                return;
-            }
-
-            alert(
-                "Terima kasih " +
-                nama +
-                "!\n\nPesan Anda berhasil dikirim ke Zahra Sweet Bakery."
-            );
-
-            form.reset();
-
-        });
-
-    }
-
-    // ===============================
-    // SCROLL ANIMATION
-    // ===============================
-
-    const observer = new IntersectionObserver((entries)=>{
-
-        entries.forEach((entry)=>{
-
-            if(entry.isIntersecting){
-
-                entry.target.style.opacity="1";
-                entry.target.style.transform="translateY(0)";
-
-            }
-
-        });
-
-    },{
-        threshold:0.2
-    });
-
-    document.querySelectorAll(".contact-card,.contact-form,.map-container").forEach((el)=>{
-
-        el.style.opacity="0";
-        el.style.transform="translateY(50px)";
-        el.style.transition="0.7s";
-
-        observer.observe(el);
-
-    });
-
-    // ===============================
-    // HOVER BUTTON
-    // ===============================
-
-    const button = document.querySelector(".btn-contact");
-
-    if(button){
-
-        button.addEventListener("mouseenter",()=>{
-
-            button.style.transform="scale(1.05)";
-
-        });
-
-        button.addEventListener("mouseleave",()=>{
-
-            button.style.transform="scale(1)";
-
-        });
-
-    }
-
-    // ===============================
-    // SOCIAL ICON
-    // ===============================
-
-    const socials = document.querySelectorAll(".social-media a");
-
-    socials.forEach((icon)=>{
-
-        icon.addEventListener("mouseenter",()=>{
-
-            icon.style.transform="translateY(-8px) rotate(8deg)";
-
-        });
-
-        icon.addEventListener("mouseleave",()=>{
-
-            icon.style.transform="translateY(0) rotate(0deg)";
-
-        });
-
-    });
-
-    // ===============================
-    // CONTACT CARD
-    // ===============================
-
-    document.querySelectorAll(".contact-card").forEach((card)=>{
-
-        card.addEventListener("mouseenter",()=>{
-
-            card.style.boxShadow="0 20px 35px rgba(0,0,0,.18)";
-
-        });
-
-        card.addEventListener("mouseleave",()=>{
-
-            card.style.boxShadow="0 10px 25px rgba(0,0,0,.08)";
-
-        });
-
-    });
-
-});
-
-
 // =======================================
+// ZAHRA SWEET BAKERY
+// SCRIPT.JS
+// =======================================
+
+// =============================
+// DATA KERANJANG
+// =============================
+
+let keranjang = JSON.parse(localStorage.getItem("keranjang")) || [];
+
+// =============================
+// SIMPAN DATA
+// =============================
+
+function simpanKeranjang() {
+
+    localStorage.setItem(
+        "keranjang",
+        JSON.stringify(keranjang)
+    );
+
+    updateBadge();
+
+}
+
+// =============================
+// BADGE KERANJANG
+// =============================
+
+function updateBadge() {
+
+    const badge = document.getElementById("cart-count");
+
+    if (badge) {
+
+        badge.textContent = keranjang.length;
+
+    }
+
+}
+
+// =============================
+// TAMBAH PRODUK
+// =============================
+
+function tambahKeranjang(nama, harga) {
+
+    keranjang.push({
+
+        nama: nama,
+        harga: harga
+
+    });
+
+    simpanKeranjang();
+
+    alert(nama + " berhasil ditambahkan ke keranjang.");
+
+}
+
+// =============================
+// TAMPILKAN KERANJANG
+// =============================
+
+function tampilkanKeranjang() {
+
+    const body = document.getElementById("cart-body");
+
+    if (!body) return;
+
+    body.innerHTML = "";
+
+    let total = 0;
+
+    if (keranjang.length === 0) {
+
+        body.innerHTML = `
+        <tr>
+            <td colspan="4">
+                Keranjang masih kosong.
+            </td>
+        </tr>
+        `;
+
+        const totalHarga = document.getElementById("totalHarga");
+
+        if(totalHarga){
+
+            totalHarga.innerHTML="Rp0";
+
+        }
+
+        return;
+
+    }
+
+    keranjang.forEach((item,index)=>{
+
+        total += item.harga;
+
+        body.innerHTML += `
+
+        <tr>
+
+            <td>${index+1}</td>
+
+            <td>${item.nama}</td>
+
+            <td>
+                Rp${item.harga.toLocaleString("id-ID")}
+            </td>
+
+            <td>
+
+                <button onclick="hapusItem(${index})">
+
+                    Hapus
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+    const totalHarga=document.getElementById("totalHarga");
+
+    if(totalHarga){
+
+        totalHarga.innerHTML=
+        "Rp"+total.toLocaleString("id-ID");
+
+    }
+
+}
+
+// =============================
+// HAPUS PRODUK
+// =============================
+
+function hapusItem(index){
+
+    keranjang.splice(index,1);
+
+    simpanKeranjang();
+
+    tampilkanKeranjang();
+
+}
+
+// =============================
+// KOSONGKAN
+// =============================
+
+function kosongkanKeranjang(){
+
+    if(confirm("Kosongkan semua keranjang?")){
+
+        keranjang=[];
+
+        localStorage.removeItem("keranjang");
+
+        updateBadge();
+
+        tampilkanKeranjang();
+
+    }
+
+}
+
+// =============================
+// CHECKOUT WA
+// =============================
+
+function checkoutWA(){
+
+    if(keranjang.length===0){
+
+        alert("Keranjang masih kosong.");
+
+        return;
+
+    }
+
+    let pesan="Halo Zahra Sweet Bakery,%0A";
+
+    let total=0;
+
+    keranjang.forEach((item)=>{
+
+        pesan+=
+        "- "+
+        item.nama+
+        " : Rp"+
+        item.harga.toLocaleString("id-ID")+
+        "%0A";
+
+        total+=item.harga;
+
+    });
+
+    pesan+="%0ATotal = Rp"+total.toLocaleString("id-ID");
+
+    window.open(
+
+        "https://wa.me/6281234567890?text="+pesan,
+
+        "_blank"
+
+    );
+
+}
+
+// =============================
 // SMOOTH SCROLL
-// =======================================
+// =============================
 
-document.querySelectorAll('a[href^="#"]').forEach(anchor=>{
+document.querySelectorAll('a[href^="#"]').forEach((link)=>{
 
-    anchor.addEventListener("click",function(e){
+    link.addEventListener("click",function(e){
 
-        const target=document.querySelector(this.getAttribute("href"));
+        const tujuan=document.querySelector(
 
-        if(target){
+            this.getAttribute("href")
+
+        );
+
+        if(tujuan){
 
             e.preventDefault();
 
-            target.scrollIntoView({
+            tujuan.scrollIntoView({
 
                 behavior:"smooth"
 
@@ -170,36 +245,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor=>{
 
 });
 
+// =============================
+// LOADING
+// =============================
 
-// =======================================
-// WHATSAPP
-// =======================================
+window.onload=function(){
 
-const waButton = document.querySelector(".contact-card a");
+    updateBadge();
 
-if(waButton){
+    tampilkanKeranjang();
 
-    waButton.addEventListener("click",()=>{
-
-        const message =
-            "Halo Zahra Sweet Bakery,%0A%0ASaya ingin memesan produk bakery.%0ATerima kasih.";
-
-        waButton.href =
-            "https://wa.me/6281234567890?text=" + message;
-
-    });
-
-}
-
-
-// =======================================
-// CURRENT YEAR (opsional)
-// =======================================
-
-const year = document.getElementById("year");
-
-if(year){
-
-    year.textContent = new Date().getFullYear();
-
-}
+};
