@@ -12,7 +12,7 @@ let keranjang = JSON.parse(localStorage.getItem("keranjang")) || [];
 // =============================
 // SIMPAN DATA
 // =============================
-
+ 
 function simpanKeranjang() {
 
     localStorage.setItem(
